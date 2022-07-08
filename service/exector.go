@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"os/exec"
+	"strings"
 )
 
 var (
@@ -54,8 +55,8 @@ func ISPowerSupply() bool {
 		return false
 	}
 	zap.L().Debug("ISPowerSupply output:" + output)
-
-	return output == "yes"
+	//这里经过测试打印出来的是yes\n懒得去处理，直接contains就给过
+	return strings.Contains(output, "yes")
 }
 func GetACAdapterInfo() string {
 	output, err := ExecShell("upower", nil, "-i", CmdPowerACInfo)
