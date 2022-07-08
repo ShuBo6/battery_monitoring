@@ -50,7 +50,7 @@ func ExecShell(cmd string, env map[string]string, args ...string) (string, error
 func ISPowerSupply() bool {
 	output, err := ExecShell("upower", nil, "-i", CmdIsPowerSupply)
 	if err != nil {
-		zap.L().Error("GetACAdapterInfo failed", zap.Error(err))
+		zap.L().Error("ISPowerSupply failed", zap.Error(err))
 		return false
 	}
 
