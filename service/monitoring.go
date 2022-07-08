@@ -19,7 +19,7 @@ func Monitoring() {
 				zap.L().Error("genNotify error", zap.Error(err))
 			}
 		} else {
-			zap.L().Info("PowerSupply yes")
+			zap.L().Debug("PowerSupply yes")
 		}
 
 		time.Sleep(time.Duration(global.C.System.MonitoringInterval * 1000 * 1000 * 1000))

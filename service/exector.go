@@ -23,7 +23,7 @@ func checkCmd(cmd ...string) bool {
 	return true
 }
 func baseShellExec(cmd string, env map[string]string, args ...string) (string, error) {
-	zap.L().Info("baseShellExec", zap.String("cmd:", cmd))
+	zap.L().Debug("baseShellExec", zap.String("cmd:", cmd))
 	if !checkCmd(cmd) {
 		//TODO 这里如果没有upower直接panic掉，后续可以优化下
 		panic("upower工具未安装")
@@ -41,7 +41,7 @@ func baseShellExec(cmd string, env map[string]string, args ...string) (string, e
 		zap.L().Error("baseShellExec", zap.Error(err))
 		return string(output), err
 	}
-	zap.L().Info("baseShellExec", zap.String("cmd output", string(output)))
+	zap.L().Debug("baseShellExec", zap.String("cmd output", string(output)))
 	return string(output), nil
 }
 func ExecShell(cmd string, env map[string]string, args ...string) (string, error) {
@@ -53,6 +53,7 @@ func ISPowerSupply() bool {
 		zap.L().Error("ISPowerSupply failed", zap.Error(err))
 		return false
 	}
+	zap.L().Debug("ISPowerSupply output:" + output)
 
 	return output == "yes"
 }
