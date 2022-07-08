@@ -10,7 +10,7 @@ import (
 var (
 	CmdBatteryInfo   = `/org/freedesktop/UPower/devices/battery_BAT0`
 	CmdPowerACInfo   = `/org/freedesktop/UPower/devices/line_power_AC`
-	CmdIsPowerSupply = `/org/freedesktop/UPower/devices/line_power_AC | grep 'power supply' | awk  '{print $NF}'`
+	CmdIsPowerSupply = `upower -i /org/freedesktop/UPower/devices/line_power_AC | grep 'power supply' | awk  '{print $NF}'`
 )
 
 func checkCmd(cmd ...string) bool {
@@ -48,7 +48,7 @@ func ExecShell(cmd string, env map[string]string, args ...string) (string, error
 	return baseShellExec(cmd, env, args...)
 }
 func ISPowerSupply() bool {
-	output, err := ExecShell("upower", nil, "-i", CmdIsPowerSupply)
+	output, err := ExecShell("bash", nil, "-c", CmdIsPowerSupply)
 	if err != nil {
 		zap.L().Error("ISPowerSupply failed", zap.Error(err))
 		return false
