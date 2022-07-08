@@ -11,7 +11,7 @@ import (
 
 func Monitoring() {
 	for {
-		if !ISPowerSupply() {
+		if !IsCharging() {
 			ac, b := GetACAdapterInfo(), GetBatteryInfo()
 			zap.L().Info("PowerSupply no", zap.String("ac", ac), zap.String("b", b))
 			err := genNotify(global.ToEmail, ac, b)

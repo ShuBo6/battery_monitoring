@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	CmdBatteryInfo   = `/org/freedesktop/UPower/devices/battery_BAT0`
-	CmdPowerACInfo   = `/org/freedesktop/UPower/devices/line_power_AC`
-	CmdIsPowerSupply = `upower -i /org/freedesktop/UPower/devices/line_power_AC | grep 'power supply' | awk  '{print $NF}'`
+	CmdBatteryInfo = `/org/freedesktop/UPower/devices/battery_BAT0`
+	CmdPowerACInfo = `/org/freedesktop/UPower/devices/line_power_AC`
+	CmdIsCharging  = `upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep state | awk '{print $NF}'`
 )
 
 func checkCmd(cmd ...string) bool {
@@ -48,15 +48,15 @@ func baseShellExec(cmd string, env map[string]string, args ...string) (string, e
 func ExecShell(cmd string, env map[string]string, args ...string) (string, error) {
 	return baseShellExec(cmd, env, args...)
 }
-func ISPowerSupply() bool {
-	output, err := ExecShell("bash", nil, "-c", CmdIsPowerSupply)
+func IsCharging() bool {
+	output, err := ExecShell("bash", nil, "-c", CmdIsCharging)
 	if err != nil {
-		zap.L().Error("ISPowerSupply failed", zap.Error(err))
+		zap.L().Error("IsCharging failed", zap.Error(err))
 		return false
 	}
-	zap.L().Debug("ISPowerSupply output:" + output)
+	zap.L().Debug("IsCharging output:" + output)
 	//这里经过测试打印出来的是yes\n懒得去处理，直接contains就给过
-	return strings.Contains(output, "yes")
+	return !strings.Contains(output, "discharging")
 }
 func GetACAdapterInfo() string {
 	output, err := ExecShell("upower", nil, "-i", CmdPowerACInfo)

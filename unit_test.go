@@ -9,5 +9,5 @@ import (
 
 func TestGetInfo(t *testing.T) {
 	initial.Init()
-	fmt.Println(service.ISPowerSupply())
+	fmt.Println(service.IsCharging())
 }
