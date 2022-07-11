@@ -7,7 +7,8 @@
 
 ## 配置环境变量
 ```shell
-TO_EMAILS=xxx@163.com,xxx@qq.com
+TO_EMAILS=xxx@163.com,xxx@qq.com # 必填，否则程序panic
+CONF_PATH=/opt/battery_monitoring/conf/config.yaml #可选填，默认为conf/config.yaml
 ```
 ## 配置文件conf/config.yaml 模板如下
 ```yaml
@@ -35,6 +36,35 @@ email:
   secret: "xxxxxxxxx"
   port: 587
 ```
+
+## 最佳实践
+将battery_monitoring程序注册成systemd的自定义服务。（pve宿主机就不折腾容器化了，如果是其他发行版可以试一下）
+```shell
+## 注册自定义服务（注意：这里必须使用绝对路径，并且声明环境变量，参考：https://blog.csdn.net/yanhanhui1/article/details/117196904）
+cat > /usr/lib/systemd/system/battery_monitoring.service << EOF
+[Unit]
+Description=BatteryMonitoring
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=simple
+Environment="TO_EMAILS=xxx@qq.com,xxx@163.com"
+Environment="CONF_PATH=/opt/battery_monitoring/conf/config.yaml"
+ExecStart=/opt/battery_monitoring/battery_monitoring
+ExecStop=kill -9 $(pidof battery_monitoring)
+ExecReload=kill -9 $(pidof battery_monitoring) && /opt/battery_monitoring/battery_monitoring
+
+[Install]
+WantedBy=multi-user.target
+EOF
+## 重载服务
+systemctl daemon-reload
+## 开机自启
+systemctl enable battery_monitoring
+## 启动服务
+systemctl start battery_monitoring
+```
+
 
 
 # 直接使用upower （如果对upower不感冒可以不看）
