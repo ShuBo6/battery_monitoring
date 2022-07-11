@@ -9,7 +9,7 @@ import (
 
 func InitViper() {
 	_v := viper.New()
-	_v.SetConfigFile("conf/config.yaml")
+	_v.SetConfigFile(global.ConfPath)
 	if err := _v.ReadInConfig(); err != nil {
 		panic(fmt.Sprintf(`读取config.yaml文件失败, err: %v`, err))
 	}

@@ -1,3 +1,6 @@
 package global
 
-var ToEmail string
+var (
+	ConfPath string
+	ToEmail  string
+)
